@@ -1,55 +1,33 @@
 import flet as ft
 from src.trade_window.graph.graph import Graph
+from src.trade_window.stakan.UI.stakan import Stakan_column
+from src.trade_window.stakan.UI.lenta import Lenta
+from src.trade_window.stakan.UI.nakopleniya import Nakopleniya
+from src.trade_window.stakan.UI.order import Order
+from src.trade_window.stakan.UI.change_symbol import Change_symbol
+from src.trade_window.stakan.UI.resize import Resize
 
 
 class Stakan(ft.UserControl):
+    def __init__(self,symbol):
+        super().__init__()
+        self.symbol = symbol
+
 
     def build(self):
         
         self.stakan = ft.Column(
             width=250,
             controls=[
-                ft.Container( # окно выбора монеты
-                    content = ft.Row(),
-                    width=250,
-                    height=30,
-                    bgcolor='#d3eef0',
-                ),
-                ft.Container( # окно инфо и масштаба
-                    content = ft.Row(),
-                    width=250,
-                    height=30,
-                    bgcolor='#d3eef0',
-                ),
+                Change_symbol(self.symbol),
+                Resize(),
                 ft.Container( # стакан контейнер
                     content = ft.Row(
                         controls=[
-                            ft.Container(
-                                content = ft.Row(),
-                                width=50,
-                                height=600,
-                                bgcolor='#24c6d1',
-                                padding=0,
-                                margin=0
-                            ),
-                            ft.Container(
-                                content = ft.Row(),
-                                width=57,
-                                height=600,
-                                bgcolor='#24c6d1',
-                            ),
-                            ft.Container(
-                                content = ft.Row(),
-                                width=110,
-                                height=600,
-                                bgcolor='#24c6d1',
-                            ),
-                            ft.Container(
-                                content = ft.Row(),
-                                width=30,
-                                height=600,
-                                bgcolor='#24c6d1',
-                            )
+                            Nakopleniya(),
+                            Lenta(),
+                            Stakan_column(),
+                            Order()
                         ],
                         spacing=1
                     ),

@@ -6,7 +6,11 @@ from src.trade_window.likvidnost.likvidnost import Likvidnost
 from src.trade_window.robot_trade.robot_trade import Robot_trade
 from src.trade_window.dev.dev import Dev
 
-
+settings = {
+    'symbol_1':'BTCUSDT',
+    'symbol_2':'DOGEUSDT',
+    'symbol_3':'LUNAUSDT',
+}
 
 def main(page: ft.Page):
     # page.window_center()
@@ -22,9 +26,9 @@ def main(page: ft.Page):
                         controls=[
                             ft.Row( # в которых 3 стакана
                                 controls=[
-                                    Stakan(),
-                                    Stakan(),
-                                    Stakan()
+                                    Stakan(settings['symbol_1']),
+                                    Stakan(settings['symbol_2']),
+                                    Stakan(settings['symbol_3']),
                                 ]
                             ),
                             Dev()
