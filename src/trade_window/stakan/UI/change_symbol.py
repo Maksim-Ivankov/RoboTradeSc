@@ -14,7 +14,7 @@ class Change_symbol(ft.UserControl):
         self.change_symbol = ft.Container(
                 content = ft.Row(
                     controls=[
-                        ft.Container( # отображение движения за день в процентах
+                        ft.Container( # отображение движения за день в процентахd
                             content=ft.Text(
                                 '+15%',
                                 size=12,
