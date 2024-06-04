@@ -2,6 +2,10 @@ import flet as ft
 
 
 class Resize(ft.UserControl):
+    def __init__(self,symbol):
+        super().__init__()
+        self.symbol = symbol
+
 
     def build(self):
         
@@ -14,7 +18,7 @@ class Resize(ft.UserControl):
                             icon_size=17,
                             width=20,
                             height=20,
-                            padding=0      
+                            # padding=0      
                         ),
                         ft.IconButton(
                             ft.icons.ADD_CIRCLE_SHARP,
@@ -22,10 +26,10 @@ class Resize(ft.UserControl):
                             icon_size=17,
                             width=20,
                             height=20,
-                            padding=0
+                            # padding=0
                         ),
                         ft.Text('X10'),
-                        ft.Text('BNC:FT:BTCUSDT'),
+                        ft.Text(f'BNC:FT:{self.symbol}'),
                     ]
             ),
             width=250,

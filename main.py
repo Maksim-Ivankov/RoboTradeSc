@@ -4,7 +4,7 @@ from src.trade_window.finrez.finrez import Finrez
 from src.trade_window.big_trade.big_trade import Big_trade
 from src.trade_window.likvidnost.likvidnost import Likvidnost
 from src.trade_window.robot_trade.robot_trade import Robot_trade
-from src.trade_window.dev.dev import Dev
+from src.trade_window.dev.dev import Dev    
 
 settings = {
     'symbol_1':'BTCUSDT',
@@ -12,7 +12,7 @@ settings = {
     'symbol_3':'LUNAUSDT',
 }
 
-def main(page: ft.Page):
+async def main(page: ft.Page):
     # page.window_center()
     page.theme_mode='light'
     page.horizontal_alignment = 'center'
@@ -27,8 +27,8 @@ def main(page: ft.Page):
                             ft.Row( # в которых 3 стакана
                                 controls=[
                                     Stakan(settings['symbol_1']),
-                                    Stakan(settings['symbol_2']),
-                                    Stakan(settings['symbol_3']),
+                                    # Stakan(settings['symbol_2']),
+                                    # Stakan(settings['symbol_3']),
                                 ]
                             ),
                             Dev()
@@ -48,7 +48,6 @@ def main(page: ft.Page):
             ]
         )
     )
-    page.add(main_print)
-    page.update()
+    await page.add_async(main_print)
 
 ft.app(target=main)

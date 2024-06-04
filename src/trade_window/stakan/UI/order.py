@@ -6,7 +6,7 @@ class Order(ft.UserControl):
     def build(self):
         
         self.order = ft.Container(
-                content = ft.Text('Одер',text_align='center'),
+                content = ft.Text('100',text_align='center'),
                 width=30,
                 height=600,
                 bgcolor='#24c6d1',

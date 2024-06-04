@@ -20,13 +20,13 @@ class Stakan(ft.UserControl):
             width=250,
             controls=[
                 Change_symbol(self.symbol),
-                Resize(),
+                Resize(self.symbol),
                 ft.Container( # стакан контейнер
                     content = ft.Row(
                         controls=[
                             Nakopleniya(),
                             Lenta(),
-                            Stakan_column(),
+                            Stakan_column(self.symbol),
                             Order()
                         ],
                         spacing=1
