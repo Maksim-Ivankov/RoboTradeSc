@@ -16,31 +16,30 @@ class Orderbook:
         self._last_update_id = 0
         self._prev_u = None
         self._lock = False
-        print('Инициализация')
 
     def _get_snapshot(self):
-        """Сбросьте _bids и _asks на моментальный снимок текущей книги заказов и обновите last_update_id."""
+        """Сбросьте значения _bids и _asks на моментальный снимок текущей книги заказов и обновите last_update_id."""
         r = requests.get(self._rest)
         self._lock = True
         data = json.loads(r.text)
-        print('Загрузили стакан')
+        
         self._last_update_id = data["lastUpdateId"]
 
         self._bids = {float(price): float(qty) for price, qty in data["bids"]}
         self._asks = {float(price): float(qty) for price, qty in data["asks"]}
         self._lock = False
+        print('Получили снепшот')
 
     def on_close(self, ws):
-        print("Session closed.")
+        print("Сессия закрыта")
 
     def on_message(self, ws, message_str):
         while self._lock:
             pass
-
+        print('Вебсокеты из ордербук')
         message = json.loads(message_str)
-        print(message)
         if message["u"] >= self._last_update_id:
-            #Циклически просматривайте уровни цен и количества для проведения торгов и запросов и обновляйте количество
+            #Просматривайте уровни цен и количества для получения информации о предложениях и запросах, а также обновляйте количество
             for price_level, qty in message["b"]:
                 if float(qty) == 0:
                     self._bids.pop(float(price_level), None)
@@ -54,17 +53,18 @@ class Orderbook:
                     self._asks[float(price_level)] = float(qty)
 
         if self._prev_u != None and self._prev_u != message["pu"]:
-            print("Orderbook out of sync, grabbing new snapshot")
+            print("Рассинхронизация книги заказов приводит к появлению нового снимка")
             self._get_snapshot()
 
         self._prev_u = message["u"]
 
     def connect(self):
-        print('Коннект')
         wst = threading.Thread(target=self._ws.run_forever)
         wst.daemon = True
         wst.start()
+        print('Стартовали поток с вебсокетами')
         self._get_snapshot()
+        
 
     def get_quotes(self) -> tuple[float, float]:
         """Return best bid and ask"""

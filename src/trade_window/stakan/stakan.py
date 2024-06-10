@@ -12,6 +12,7 @@ class Stakan(ft.UserControl):
     def __init__(self,symbol):
         super().__init__()
         self.symbol = symbol
+        print('Создаем стакан 1 раз')
 
 
     def build(self):
@@ -26,7 +27,7 @@ class Stakan(ft.UserControl):
                         controls=[
                             Nakopleniya(),
                             Lenta(),
-                            Stakan_column(self.symbol),
+                            Stakan_column(),
                             Order()
                         ],
                         spacing=1
