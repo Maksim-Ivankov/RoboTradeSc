@@ -2,7 +2,7 @@ import flet as ft
 from model.orderbook import Orderbook
 from threading import Event, Thread
 from time import sleep
-
+import time, threading
 
 
 def call_repeatedly(interval, func):
@@ -29,11 +29,13 @@ bid_z = []
 ask_x = []
 ask_z = []
 y = [[0] * 100]
+flag_set_depth_once = 0
 
 # получаем данные с вебсокетов
 def set_depth():
+    global flag_set_depth_once
     bid_data = orderbook.get_bids()
-    bid_prices = sorted(bid_data.keys())[-100:]
+    bid_prices = sorted(bid_data.keys())[-20:]
     bid_quantities = [bid_data[price] for price in bid_prices]
     bid_depth = []
     cumulative_volume = 0
@@ -44,7 +46,7 @@ def set_depth():
     bid_depth = bid_depth[::-1]
 
     ask_data = orderbook.get_asks()
-    ask_prices = sorted(ask_data.keys())[:100]
+    ask_prices = sorted(ask_data.keys())[:20]
     ask_quantities = [ask_data[price] for price in ask_prices]
     ask_depth = []
     cumulative_volume = 0
@@ -57,7 +59,7 @@ def set_depth():
     ask_x.append(ask_prices)
     ask_z.append(ask_depth)
 
-    print(f'{bid_x[0][-1]} | {bid_z[0][-1]}')
+    # print(f'{bid_x[0][-1]} | {bid_z[0][-1]}')
     y.append([y[-1][0] + 100] * 100)
 
     if len(y) > 10:
@@ -66,28 +68,36 @@ def set_depth():
         del ask_x[0]
         del ask_z[0]
         del y[0]
+    # page.update()
+    # stakan_work.stakan_data(bid_x,bid_z,ask_x,ask_z)
     return bid_x,bid_z,ask_x,ask_z
 
 
 
 
 class Stakan_column(ft.UserControl):
-    def __init__(self,bid_prices,bid_depth,ask_prices,ask_depth):
-        self.bid_prices = bid_prices
-        self.bid_depth = bid_depth
-        self.ask_prices = ask_prices
-        self.ask_depth = ask_depth
-        
-    def stakan_data(self,bid_prices,bid_depth,ask_prices,ask_depth):
-        self.bid_prices = bid_prices
-        self.bid_depth = bid_depth
-        self.ask_prices = ask_prices
-        self.ask_depth = ask_depth
+    def did_mount(self):
+        self.running = True
+        self.myThread = threading.Thread(target=self.update_data, args=(), daemon=True)
+        self.myThread.start()
 
-    def build(self):
-        items = []
+    def update_data(self):
+        while self.running:
+            # self.count_1+=1
+            # self.countdown.value = self.count_1
+            self.bid_prices,self.bid_depth,self.ask_prices,self.ask_depth = set_depth()
+            data_ura = self.stakan_print()
+            print(f'{self.items[18].content.controls} - {self.bid_depth[0][18]}')
+            # self.controls.clear()
+            self.controls = []
+            self.controls.append(data_ura)
+            self.update()
+            time.sleep(0.1)
+
+    def stakan_print(self):
+        self.items = []
         for i in range(len(self.bid_prices[0])):
-            items.append(
+            self.items.append(
                 ft.Container(
                     content=ft.Row(
                         controls=[ 
@@ -106,7 +116,7 @@ class Stakan_column(ft.UserControl):
             )
         for i in range(len(self.ask_prices[0])):
             # print(f'{ask_depth[i][0]} | {ask_prices[i][0]}')
-            items.append(
+            self.items.append(
                 ft.Container(
                     content=ft.Row(
                         controls=[ 
@@ -126,7 +136,7 @@ class Stakan_column(ft.UserControl):
         stakan_column = ft.Container(
                 content = ft.Column(
                     spacing=0, 
-                    controls=items,
+                    controls=self.items,
                     scroll=ft.ScrollMode.HIDDEN
                     # scrollMode = 'HIDDEN '
                 ),    
@@ -139,14 +149,10 @@ class Stakan_column(ft.UserControl):
             )
         return stakan_column
 
-bid_prices,bid_depth,ask_prices,ask_depth = set_depth()
-
-
-stakan_work = Stakan_column(bid_prices,bid_depth,ask_prices,ask_depth)
-
-cancel_future_calls = call_repeatedly(0.1, stakan_work.stakan_data)
-        
-        
+    def build(self):
+        self.bid_prices,self.bid_depth,self.ask_prices,self.ask_depth = set_depth()
+        stakan_column = self.stakan_print()
+        return stakan_column
         
 
 

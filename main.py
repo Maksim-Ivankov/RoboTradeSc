@@ -14,15 +14,15 @@ settings = {
     'symbol_3':'LUNAUSDT',
 }
 
-# def call_repeatedly(interval, func):
-#     stopped = Event()
-#     def loop():
-#         while not stopped.wait(interval): # Интервал обновления
-#             func()
-#     Thread(target=loop).start()    
-#     return stopped.set
+def call_repeatedly(interval, func):
+    stopped = Event()
+    def loop():
+        while not stopped.wait(interval): # Интервал обновленияm,
+            func()
+    Thread(target=loop).start()    
+    return stopped.set
 
-async def main(page: ft.Page):
+def main(page: ft.Page):
     # page.window_center()
 
     page.theme_mode='light'
@@ -38,8 +38,8 @@ async def main(page: ft.Page):
                             ft.Row( # в которых 3 стакана
                                 controls=[
                                     Stakan(settings['symbol_1']),
-                                    # Stakan(settings['symbol_2']),
-                                    # Stakan(settings['symbol_3']),
+                                    Stakan(settings['symbol_2']),
+                                    Stakan(settings['symbol_3']),
                                 ]
                             ),
                             Dev()
@@ -59,13 +59,17 @@ async def main(page: ft.Page):
             ]
         )
     )
-    await page.add_async(main_print)
+    page.add(main_print)
     # page.update()
     
-    # async def update_stakan():
-    #     await main_print.update_async()
+    # def update_stakan():
+    #     # stakan_1.stakan_1.print_stakan()
+    #     stakan_1.print()
+    #     page.update()
+
+    # # stakan_1.stakan_1.update_async()
     
-    # cancel_future_calls = call_repeatedly(0.1, update_stakan)    
+    # cancel_future_calls = call_repeatedly(0.1, update_stakan )    
         
 
 

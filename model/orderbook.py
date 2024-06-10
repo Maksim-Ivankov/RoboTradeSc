@@ -36,7 +36,7 @@ class Orderbook:
     def on_message(self, ws, message_str):
         while self._lock:
             pass
-        print('Вебсокеты из ордербук')
+        # print('Вебсокеты из ордербук')
         message = json.loads(message_str)
         if message["u"] >= self._last_update_id:
             #Просматривайте уровни цен и количества для получения информации о предложениях и запросах, а также обновляйте количество
