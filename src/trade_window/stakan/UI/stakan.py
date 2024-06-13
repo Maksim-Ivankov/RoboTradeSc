@@ -1,22 +1,14 @@
 import flet as ft
-from model.orderbook import Orderbook
 from threading import Event, Thread
 from time import sleep
 import time, threading
 import numpy as np
 
-def call_repeatedly(interval, func):
-    stopped = Event()
-    def loop():
-        while not stopped.wait(interval): # Интервал обновления
-            func()
-    Thread(target=loop).start()    
-    return stopped.set
-
 class Stakan_column(ft.UserControl):
-    def __init__(self,symbol):
+    def __init__(self,symbol,orderbook):
         super().__init__()
         self.symbol = symbol
+        self.orderbook = orderbook
 
     def did_mount(self):
         self.running = True
@@ -24,9 +16,9 @@ class Stakan_column(ft.UserControl):
         self.myThread.start()
 
     
-    # получаем данные с вебсокетов
+    # получаем данные с вебсокетовк
     def set_depth(self):
-        bid_data = self.orderbook.get_bids()
+        bid_data = self.orderbook.get_bids(self.symbol)
         bid_prices = sorted(bid_data.keys())[-self.bid_count:]
         bid_quantities = [bid_data[price] for price in bid_prices]
         bid_depth = []
@@ -36,7 +28,7 @@ class Stakan_column(ft.UserControl):
 
         bid_depth = bid_depth[::-1]
 
-        ask_data = self.orderbook.get_asks()
+        ask_data = self.orderbook.get_asks(self.symbol)
         ask_prices = sorted(ask_data.keys())[:self.ask_count]
         ask_quantities = [ask_data[price] for price in ask_prices]
         ask_depth = []
@@ -68,9 +60,6 @@ class Stakan_column(ft.UserControl):
         while self.running:
             self.bid_prices,self.bid_depth,self.ask_prices,self.ask_depth = self.set_depth()
             self.data_ura = self.stakan_print()
-            # self.data_ura.scroll=ft.ScrollMode.HIDDEN
-            # data_ura.scroll_to(delta=50)
-            # self.data_ura.scroll_to(key="spred", duration=1000)
             self.controls = []
             self.controls.append(self.data_ura)
             self.update()
@@ -103,8 +92,8 @@ class Stakan_column(ft.UserControl):
                         bgcolor = '#EDC6C6',
                     )
                 )   
+        print(f'{self.symbol} | {self.ask_depth[0][-1]} | {self.ask_prices[0][-1]}')
         for i in range(len(self.ask_prices[0])):
-            # print(f'{ask_depth[i][0]} | {ask_prices[i][0]}')
             if round(self.ask_depth[0][i],1) != 0:
                 if len(str(self.bid_depth[0][i])) < 5:
                     ask_depth_vivod = round(self.bid_depth[0][i],1)
@@ -129,7 +118,6 @@ class Stakan_column(ft.UserControl):
                         bgcolor = '#A0DBC6',
                     )
                 )
-
             stakan_column=ft.Column(
                     spacing=0, 
                     controls=self.items,
@@ -144,10 +132,7 @@ class Stakan_column(ft.UserControl):
     #     print('222222')
 
     def build(self):
-        # self.isolated = True
-        # self.symbol = 'btcusdt'
-        self.orderbook = Orderbook(self.symbol)
-        self.orderbook.connect()
+  
         self.bid_x = []
         self.bid_z = []
         self.ask_x = []
@@ -159,8 +144,6 @@ class Stakan_column(ft.UserControl):
         self.bid_prices,self.bid_depth,self.ask_prices,self.ask_depth = self.set_depth()
         stakan_column = self.stakan_print()
 
-
-        time.sleep(1)
         return stakan_column
         
   

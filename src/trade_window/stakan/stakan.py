@@ -9,10 +9,10 @@ from src.trade_window.stakan.UI.resize import Resize
 
 
 class Stakan(ft.UserControl):
-    def __init__(self,symbol):
+    def __init__(self,symbol,orderbook):
         super().__init__()
         self.symbol = symbol
-        print('Создаем стакан 1 раз')
+        self.orderbook = orderbook
 
 
 
@@ -27,7 +27,7 @@ class Stakan(ft.UserControl):
                         controls=[
                             Nakopleniya(),
                             Lenta(),
-                            Stakan_column(self.symbol),
+                            Stakan_column(self.symbol,self.orderbook),
                             Order()
                         ],
                         spacing=1,

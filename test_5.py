@@ -1,17 +1,15 @@
 import argparse
 from threading import Event, Thread
 from time import sleep
-
+import threading
 from model.orderbook_2 import Orderbook
 
-symbol = "btcusdt"
+symbol = ['btcusdt','notusdt']
 
 #Проверьте, был ли указан символ в качестве аргумента, в противном случае по умолчанию используется значение DEFAULT_SYMBOLh
 
 orderbook = Orderbook(symbol)
 orderbook.connect()
-
-
 
 bid_x = []
 bid_z = []
@@ -20,7 +18,7 @@ ask_z = []
 y = [[0] * 100]
 
 def set_depth():
-    bid_data = orderbook.get_bids()
+    bid_data = orderbook.get_bids(symbol[0])
     bid_prices = sorted(bid_data.keys())[-100:]
     bid_quantities = [bid_data[price] for price in bid_prices]
     bid_depth = []
@@ -31,7 +29,7 @@ def set_depth():
 
     bid_depth = bid_depth[::-1]
 
-    ask_data = orderbook.get_asks()
+    ask_data = orderbook.get_asks(symbol[0])
     ask_prices = sorted(ask_data.keys())[:100]
     ask_quantities = [ask_data[price] for price in ask_prices]
     ask_depth = []
@@ -45,7 +43,7 @@ def set_depth():
     ask_x.append(ask_prices)
     ask_z.append(ask_depth)
 
-    # print(f'{bid_x[0][-1]} | {bid_z[0][-1]}')
+    print(f'{bid_x[0][-1]} | {bid_z[0][-1]}')
     y.append([y[-1][0] + 100] * 100)
 
     if len(y) > 10:
@@ -56,16 +54,11 @@ def set_depth():
         del y[0]
 
 
-def call_repeatedly(interval, func, *args):
-    stopped = Event()
-    def loop():
-        while not stopped.wait(interval): # the first call is in `interval` secs
-            func(*args)
-    Thread(target=loop).start()    
-    return stopped.set
-
-cancel_future_calls = call_repeatedly(0.1, set_depth)
 
 
-# set_depth()
-# sleep(0.1)
+
+
+
+
+
+
