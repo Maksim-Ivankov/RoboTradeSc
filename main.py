@@ -8,69 +8,65 @@ from src.trade_window.dev.dev import Dev
 
 from threading import Event, Thread
 
-settings = {
-    'symbol_1':'BTCUSDT',
-    'symbol_2':'DOGEUSDT',
-    'symbol_3':'LUNAUSDT',
-}
 
-def call_repeatedly(interval, func):
-    stopped = Event()
-    def loop():
-        while not stopped.wait(interval): # Интервал обновленияm,
-            func()
-    Thread(target=loop).start()    
-    return stopped.set
+class Main:
+    def __init__(self):
+        self.page: ft.Page = None
+        self.settings = {
+           'symbol_1':'BTCUSDT',
+           'symbol_2':'DOGEUSDT',
+           'symbol_3':'LUNAUSDT',
+        }
 
-def main(page: ft.Page):
-    # page.window_center()
+    def run(self, page):
+        self.page: ft.Page = page
+        self.page.title = "MIN"
+        self.page.window_height, self.page.window_width = 1000, 1200
+        # self.page.scroll = ft.ScrollMode.HIDDEN
+        # self.page.padding = ft.Padding(5, 0, 5, 0)
+        self.page.theme_mode = "light"
 
-    page.theme_mode='light'
-    page.horizontal_alignment = 'center'
-    page.window_width = 1200
-    page.window_height = 1000
-    main_print = ft.Container( # общий контейнер на страницу
-        content = ft.Row( # в контейнере 1 ряд
-            controls=[ # состоящий из двух контейнеров - обертки стаканов и доп панели индикаторов
-                ft.Container( # обертка стаканов состоит из ряда
-                    content = ft.Column(
-                        controls=[
-                            ft.Row( # в которых 3 стакана
-                                controls=[
-                                    Stakan(settings['symbol_1']),
-                                    # Stakan(settings['symbol_2']),
-                                    # Stakan(settings['symbol_3']),
-                                ],
-                                expand = True
-                            ),
-                            Dev()
-                        ],
-                        # expand = True,
-                    ),
-                    expand = True,
-                ),
-                ft.Container( # обертка индикаторов состоит из колонки
-                    content = ft.Column(
-                        controls=[
-                            Finrez(),
-                            Big_trade(),
-                            Likvidnost(),
-                            Robot_trade()
-                        ],
-                        width=380,
+        self.stakan_1 = Stakan(self.settings['symbol_1'])
+        self.main_print = ft.Container( # общий контейнер на страницу
+            content = ft.Row( # в контейнере 1 ряд
+                controls=[ # состоящий из двух контейнеров - обертки стаканов и доп панели индикаторов
+                    ft.Container( # обертка стаканов состоит из ряда
+                        content = ft.Column(
+                            controls=[
+                                ft.Row( # в которых 3 стакана
+                                    controls=[
+                                        self.stakan_1,
+                                        # Stakan(settings['symbol_2']),
+                                        # Stakan(settings['symbol_3']),
+                                    ],
+                                    expand = True
+                                ),
+                                Dev()
+                            ]
+                        ),
                         expand = True,
-                        
                     ),
-                    width=380,
-              
-                )
-            ]
-        ),
-        expand = True
-    )
-    page.add(main_print)
-  
+                    ft.Container( # обертка индикаторов состоит из колонки
+                        content = ft.Column(
+                            controls=[
+                                Finrez(),
+                                Big_trade(),
+                                Likvidnost(),
+                                Robot_trade()
+                            ],
+                            width=380,
+                            expand = True,
+                        ),
+                        width=380,
+                    )
+                ]
+            ),
+            expand = True
+        )
+        self.page.add(self.main_print)
+
+    
+    
         
 
-
-ft.app(target=main)
+ft.app(target=Main().run)
