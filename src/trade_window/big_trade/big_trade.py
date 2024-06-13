@@ -8,7 +8,7 @@ class Big_trade(ft.UserControl):
         self.big_trade = ft.Container( # окно выбора монеты
                     content = ft.Text('Крупные заявки',text_align='center',),
                     width=380,
-                    height=400,
+                    expand = 1,
                     bgcolor='#d3eef0',
                     padding=20
                 )

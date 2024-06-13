@@ -31,10 +31,12 @@ class Stakan(ft.UserControl):
                             Order()
                         ],
                         spacing=1,
+                        expand = True
                     ),
                     width=250,
-                    height=600,
-                    bgcolor='#d3eef0'
+                    bgcolor='#d3eef0',
+                    expand = True
+                    
                 ),
                 ft.Container( # График
                     content = Graph(),
@@ -44,6 +46,7 @@ class Stakan(ft.UserControl):
                 ),
             ],
             spacing=1,
+            
 
         )
         

@@ -40,11 +40,14 @@ def main(page: ft.Page):
                                     Stakan(settings['symbol_1']),
                                     # Stakan(settings['symbol_2']),
                                     # Stakan(settings['symbol_3']),
-                                ]
+                                ],
+                                expand = True
                             ),
                             Dev()
-                        ]
+                        ],
+                        # expand = True,
                     ),
+                    expand = True,
                 ),
                 ft.Container( # обертка индикаторов состоит из колонки
                     content = ft.Column(
@@ -53,23 +56,20 @@ def main(page: ft.Page):
                             Big_trade(),
                             Likvidnost(),
                             Robot_trade()
-                        ]
-                    )
+                        ],
+                        width=380,
+                        expand = True,
+                        
+                    ),
+                    width=380,
+              
                 )
             ]
-        )
+        ),
+        expand = True
     )
     page.add(main_print)
-    # page.update()
-    
-    # def update_stakan():
-    #     # stakan_1.stakan_1.print_stakan()
-    #     stakan_1.print()
-    #     page.update()
-
-    # # stakan_1.stakan_1.update_async()
-    
-    # cancel_future_calls = call_repeatedly(0.1, update_stakan )    
+  
         
 
 

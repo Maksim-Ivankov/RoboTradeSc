@@ -8,7 +8,7 @@ class Order(ft.UserControl):
         self.order = ft.Container(
                 content = ft.Text('100',text_align='center'),
                 width=30,
-                height=600,
+                expand = True,
                 bgcolor='#24c6d1',
                 padding=0,
                 margin=0

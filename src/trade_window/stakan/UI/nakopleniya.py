@@ -8,7 +8,7 @@ class Nakopleniya(ft.UserControl):
         self.nakopleniya = ft.Container(
                 content = ft.Text('Накопл',text_align='center'),
                 width=50,
-                height=600,
+                expand = True,
                 bgcolor='#24c6d1',
                 padding=0,
                 margin=0
