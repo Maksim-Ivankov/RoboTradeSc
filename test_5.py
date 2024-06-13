@@ -2,11 +2,11 @@ import argparse
 from threading import Event, Thread
 from time import sleep
 
-from model.orderbook import Orderbook
+from model.orderbook_2 import Orderbook
 
 symbol = "btcusdt"
 
-#Проверьте, был ли указан символ в качестве аргумента, в противном случае по умолчанию используется значение DEFAULT_SYMBOL
+#Проверьте, был ли указан символ в качестве аргумента, в противном случае по умолчанию используется значение DEFAULT_SYMBOLh
 
 orderbook = Orderbook(symbol)
 orderbook.connect()
@@ -45,7 +45,7 @@ def set_depth():
     ask_x.append(ask_prices)
     ask_z.append(ask_depth)
 
-    print(f'{bid_x[0][-1]} | {bid_z[0][-1]}')
+    # print(f'{bid_x[0][-1]} | {bid_z[0][-1]}')
     y.append([y[-1][0] + 100] * 100)
 
     if len(y) > 10:

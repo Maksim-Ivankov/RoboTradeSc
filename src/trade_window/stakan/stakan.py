@@ -27,7 +27,7 @@ class Stakan(ft.UserControl):
                         controls=[
                             Nakopleniya(),
                             Lenta(),
-                            Stakan_column(),
+                            Stakan_column(self.symbol),
                             Order()
                         ],
                         spacing=1,

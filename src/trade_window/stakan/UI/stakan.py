@@ -14,7 +14,9 @@ def call_repeatedly(interval, func):
     return stopped.set
 
 class Stakan_column(ft.UserControl):
-
+    def __init__(self,symbol):
+        super().__init__()
+        self.symbol = symbol
 
     def did_mount(self):
         self.running = True
@@ -143,8 +145,8 @@ class Stakan_column(ft.UserControl):
 
     def build(self):
         # self.isolated = True
-        symbol = "notusdt"
-        self.orderbook = Orderbook(symbol)
+        # self.symbol = 'btcusdt'
+        self.orderbook = Orderbook(self.symbol)
         self.orderbook.connect()
         self.bid_x = []
         self.bid_z = []

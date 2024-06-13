@@ -24,9 +24,7 @@ class Main:
         self.page.window_height, self.page.window_width = 1000, 1200
         # self.page.scroll = ft.ScrollMode.HIDDEN
         # self.page.padding = ft.Padding(5, 0, 5, 0)
-        self.page.theme_mode = "light"
-
-        self.stakan_1 = Stakan(self.settings['symbol_1'])
+        self.page.theme_mode = "light" 
         self.main_print = ft.Container( # общий контейнер на страницу
             content = ft.Row( # в контейнере 1 ряд
                 controls=[ # состоящий из двух контейнеров - обертки стаканов и доп панели индикаторов
@@ -35,8 +33,8 @@ class Main:
                             controls=[
                                 ft.Row( # в которых 3 стакана
                                     controls=[
-                                        self.stakan_1,
-                                        # Stakan(settings['symbol_2']),
+                                        Stakan(self.settings['symbol_1']),
+                                        Stakan(self.settings['symbol_2']),
                                         # Stakan(settings['symbol_3']),
                                     ],
                                     expand = True
