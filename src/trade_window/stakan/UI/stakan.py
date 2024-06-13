@@ -41,7 +41,7 @@ def set_depth():
     cumulative_volume = 0
     for qty in bid_quantities[::-1]:
         cumulative_volume += qty
-        bid_depth.append(cumulative_volume)
+        bid_depth.append(qty)
 
     bid_depth = bid_depth[::-1]
 
@@ -52,7 +52,7 @@ def set_depth():
     cumulative_volume = 0
     for qty in ask_quantities:
         cumulative_volume += qty
-        ask_depth.append(cumulative_volume)
+        ask_depth.append(qty)
 
     bid_x.append(bid_prices)
     bid_z.append(bid_depth)
