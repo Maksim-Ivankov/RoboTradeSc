@@ -15,6 +15,7 @@ class Stakan(ft.UserControl):
         print('Создаем стакан 1 раз')
 
 
+
     def build(self):
         self.stakan = ft.Column(
             width=250,
@@ -29,11 +30,11 @@ class Stakan(ft.UserControl):
                             Stakan_column(),
                             Order()
                         ],
-                        spacing=1
+                        spacing=1,
                     ),
                     width=250,
                     height=600,
-                    bgcolor='#d3eef0',
+                    bgcolor='#d3eef0'
                 ),
                 ft.Container( # График
                     content = Graph(),
@@ -42,9 +43,10 @@ class Stakan(ft.UserControl):
                     bgcolor='#d3eef0',
                 ),
             ],
-            spacing=1
-        )
+            spacing=1,
 
+        )
+        
         return self.stakan
     
     

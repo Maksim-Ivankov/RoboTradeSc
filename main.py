@@ -38,13 +38,13 @@ def main(page: ft.Page):
                             ft.Row( # в которых 3 стакана
                                 controls=[
                                     Stakan(settings['symbol_1']),
-                                    Stakan(settings['symbol_2']),
-                                    Stakan(settings['symbol_3']),
+                                    # Stakan(settings['symbol_2']),
+                                    # Stakan(settings['symbol_3']),
                                 ]
                             ),
                             Dev()
                         ]
-                    )
+                    ),
                 ),
                 ft.Container( # обертка индикаторов состоит из колонки
                     content = ft.Column(
