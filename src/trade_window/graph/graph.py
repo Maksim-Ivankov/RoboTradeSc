@@ -1,9 +1,14 @@
 import flet as ft
+import mplfinance as mpf
 
 class Graph(ft.UserControl):
+    def __init__(self,symbol,orderbook):
+        super().__init__()
+        self.symbol = symbol
+        self.orderbook = orderbook
 
-    def build(self):
-        
+
+    def build(self):        
         self.graph = ft.Container( # окно выбора монеты
                     content = ft.Text('График',text_align='center',),
                     width=250,

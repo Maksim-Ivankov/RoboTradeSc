@@ -33,7 +33,7 @@ class Main:
     def run(self, page):
         print('РИСУЕМ MAIN')
         self.page: ft.Page = page
-        self.settings = ['BTCUSDT','NOTUSDT','DOGEUSDT']
+        self.settings = ['BTCUSDT']
         # self.settings = ['BTCUSDT','NOTUSDT','DOGEUSDT','BNBUSDT','SOLUSDT','ETHUSDT']
         self.orderbook = Orderbook(self.settings)
         
@@ -52,8 +52,8 @@ class Main:
                                     controls=[
                                         # ft.Text('111')
                                         Stakan(self.settings[0],self.orderbook), # передаем монету и объект - оредрбук для доступа к нему
-                                        Stakan(self.settings[1],self.orderbook),
-                                        Stakan(self.settings[2],self.orderbook),
+                                        # Stakan(self.settings[1],self.orderbook),
+                                        # Stakan(self.settings[2],self.orderbook),
                                         # Stakan(self.settings[3],self.orderbook),
                                         # Stakan(self.settings[4],self.orderbook),
                                         # Stakan(self.settings[5],self.orderbook),

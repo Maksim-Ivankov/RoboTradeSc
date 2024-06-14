@@ -40,7 +40,7 @@ class Stakan(ft.UserControl):
                     
                 ),
                 ft.Container( # График
-                    content = Graph(),
+                    content = Graph(self.symbol,self.orderbook),
                     width=250,
                     height=200,
                     bgcolor='#d3eef0',
