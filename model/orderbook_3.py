@@ -6,6 +6,7 @@ import time
 # import threading
 import multiprocessing as mp
 from binance import ThreadedWebsocketManager
+import numpy as np
 
 class Orderbook:
     def __init__(self, symbol):
@@ -16,7 +17,6 @@ class Orderbook:
         self.socet_symbol = []
         for sym in symbol:
             self.socet_symbol.append(f'{sym.lower()}@depth@100ms')
-
         self._bids = {}
         self._asks = {}
         self._last_update_id = 0
@@ -29,6 +29,7 @@ class Orderbook:
         self.y = [[0] * 100]
         self.data_socket = {}
         print('Создали экземпляр ордрбук версия 3')
+        self._get_snapshot()
 
     def _get_snapshot(self):
         """Сбросьте значения _bids и _asks на моментальный снимок текущей книги заказов и обновите last_update_id."""
@@ -54,71 +55,55 @@ class Orderbook:
         """Return best bid and ask"""
         return max(self._bids.keys()), min(self._asks.keys())
     
-    def get_bids(self,symbol):
+    def get_bids(self,sym):
         """Return bids"""
-        return self.data_socket[symbol][0]
+        # print(self.data_socket[sym][0][-1])
+        return self.data_socket[sym][0]
     
-    def get_asks(self,symbol):
+    def get_asks(self,sym):
         """Return asks"""
-        return self.data_socket[symbol][1]
+        return self.data_socket[sym][1]
+    
+    def handle_socket_message(self,message):
+        # print(message)
+        for sym in self.symbol:
+            # print('1111')
+            # if message['data']['s'] == sym:
+                # print('22222')
+                # if message['data']["u"] >= self.data_socket[sym][2]:
+                # print('3333')
+                for price_level, qty in message['data']["b"]:
+                    if float(qty) == 0:
+                        self.data_socket[message['data']["s"]][0].pop(float(price_level), None)
+                        # print('5')
+                    else:
+                        self.data_socket[message['data']["s"]][0][float(price_level)] = float(qty)
+                        # print('6')
+                    # print(self.data_socket[sym][0][-1])
+                for price_level, qty in message['data']["a"]:
+                    if float(qty) == 0:
+                        self.data_socket[message['data']["s"]][1].pop(float(price_level), None)
+                        # print('7')
+                    else:
+                        self.data_socket[message['data']["s"]][1][float(price_level)] = float(qty)
+                        # print('8')
+        # print(np.array(self.data_socket['BTCUSDT'][0]))
+                    # print('44444')
+                # if self.data_socket[sym][3] != None and self.data_socket[sym][3] != message['data']["pu"]:
+                #     print("Рассинхронизация книги заказов приводит к появлению нового снимка")
+                #     self._get_snapshot()
+                # self.data_socket[sym][3] = message['data']["u"]
 
+        
         # запускаем вебсокеты, когда вошли в сделку, следим за монетой, рисуем график и данные в реальном времени    
     def websocket_trade(self):
+        print('ВЕБСОКЕТЫ РАБОТАЮТ')
         twm = ThreadedWebsocketManager(api_key=self.api_key, api_secret=self.api_secret)
-
-
-
-
-        # try:
-        #     with websockets.connect(self._socket) as ws:
-        #         print('Подключились к вебсокетам')
-        #         while True:        
-        #             try:
-        #                 message = json.loads(ws.recv())['data']
-        #                 # print(message)
-        #                 for sym in self.symbol:
-        #                     # print('1111')
-        #                     if message['s'] == sym:
-        #                         # print('22222')
-        #                         if message["u"] >= self.data_socket[sym][2]:
-        #                             # print('3333')
-        #                             for price_level, qty in message["b"]:
-        #                                 if float(qty) == 0:
-        #                                     self.data_socket[sym][0].pop(float(price_level), None)
-        #                                     # print('5')
-        #                                 else:
-        #                                     self.data_socket[sym][0][float(price_level)] = float(qty)
-        #                                     # print('6')
-        #                                 # print(self.data_socket[sym][0][-1])
-        #                             for price_level, qty in message["a"]:
-        #                                 if float(qty) == 0:
-        #                                     self.data_socket[sym][1].pop(float(price_level), None)
-        #                                     # print('7')
-        #                                 else:
-        #                                     self.data_socket[sym][1][float(price_level)] = float(qty)
-        #                                     # print('8')
-        #                             # print('44444')
-        #                         if self.data_socket[sym][3] != None and self.data_socket[sym][3] != message["pu"]:
-        #                             print("Рассинхронизация книги заказов приводит к появлению нового снимка")
-        #                             self._get_snapshot()
-        #                         self.data_socket[sym][3] = message["u"]
-        #                     else:
-        #                         continue
-
-        #             except websockets.exceptions.ConnectionClosed:
-        #                 print('Вебсокеты обосались и закрылись')
-        #                 break
-        # except Exception as e:
-        #     print(f'Ошибка - {e}')
+        twm.start()
+        twm.start_multiplex_socket(callback=self.handle_socket_message, streams=self.socet_symbol)
+        twm.join()
 
 
 
     def connect(self):
-        print('Стартовали поток с вебсокетами')
-        self._get_snapshot()
-        self.running = True
-        p = mp.Process(target=self.websocket_trade)
-        p.start()
-        # self.myThread = threading.Thread(target=self.websocket_trade(), args=(), daemon=True)
-        # self.myThread.start()
-        # asyncio.run(self.websocket_trade())
+        self.websocket_trade()

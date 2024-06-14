@@ -19,22 +19,24 @@ class Main:
         # loop22734 = asyncio.new_event_loop()
         # asyncio.set_event_loop(loop22734)
         # loop22734 = asyncio.get_event_loop()
-        # loop22734.run_until_complete(self.websocket_start()) 
+        # loop22734.run_until_complete(self.orderbook.connect()) 
 
         # thread76544 = threading.Thread(target=self.websocket_start())
         # thread76544.start()
         # p=mp.Process(target=self.websocket_start)
         # p.start()
 
-    async def websocket_start(self):
+    # async def websocket_start(self):
         
-        await self.orderbook.connect() 
+    #     await self.orderbook.connect() 
 
     def run(self, page):
+        print('РИСУЕМ MAIN')
         self.page: ft.Page = page
-        self.settings = ['BTCUSDT','NOTUSDT']
+        self.settings = ['BTCUSDT','NOTUSDT','DOGEUSDT']
+        # self.settings = ['BTCUSDT','NOTUSDT','DOGEUSDT','BNBUSDT','SOLUSDT','ETHUSDT']
         self.orderbook = Orderbook(self.settings)
-        self.orderbook.connect() 
+        
         self.page.title = "MIN"
         self.page.window_height, self.page.window_width = 1000, 1200
         # self.page.scroll = ft.ScrollMode.HIDDEN
@@ -51,7 +53,10 @@ class Main:
                                         # ft.Text('111')
                                         Stakan(self.settings[0],self.orderbook), # передаем монету и объект - оредрбук для доступа к нему
                                         Stakan(self.settings[1],self.orderbook),
-                                        # Stakan(self.settings[2]),
+                                        Stakan(self.settings[2],self.orderbook),
+                                        # Stakan(self.settings[3],self.orderbook),
+                                        # Stakan(self.settings[4],self.orderbook),
+                                        # Stakan(self.settings[5],self.orderbook),
                                     ],
                                     expand = True
                                 ),
@@ -78,6 +83,8 @@ class Main:
             expand = True
         )
         self.page.add(self.main_print)
+        print('Нарисовали main')
+        self.orderbook.connect() 
 
 
 # thread7654 = threading.Thread(target=ft.app(target=Main().run))

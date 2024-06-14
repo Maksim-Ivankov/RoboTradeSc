@@ -17,6 +17,7 @@ class Stakan(ft.UserControl):
 
 
     def build(self):
+        print('РИСУЕМ СТАКАН ЦЕЛИКОМ')
         self.stakan = ft.Column(
             width=250,
             controls=[

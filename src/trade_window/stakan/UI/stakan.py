@@ -68,56 +68,65 @@ class Stakan_column(ft.UserControl):
     def stakan_print(self):
         self.items = []
         for i in range(len(self.bid_prices[0])):
-            if round(self.bid_depth[0][i],1) != 0:
-                if len(str(self.bid_depth[0][i])) < 5:
-                    bid_depth_vivod = round(self.bid_depth[0][i],1)
-                else:
-                    bid_depth_vivod = f'{round(self.bid_depth[0][i]/1000,1)}к'
-                self.items.append(
-                    ft.Container(
-                        content=ft.Row(
-                            controls=[ 
-                                ft.Text(
-                                    value=bid_depth_vivod,
-                                    size=12,
-                                    width=50,
-                                ),
-                                ft.Text(
-                                    value=self.bid_prices[0][i],
-                                    size=12,
-                                    width=60,
-                                ),
-                            ],  
-                        ),
-                        bgcolor = '#EDC6C6',
-                    )
-                )   
+            # if round(self.bid_depth[0][i],1) > 0: # здесь поставить != тогда будет отсевание нулевых значений
+                # if len(str(self.bid_depth[0][i])) < 5:
+                #     bid_depth_vivod = round(self.bid_depth[0][i],1)
+                # else:
+                #     bid_depth_vivod = f'{round(self.bid_depth[0][i]/1000,1)}к'
+            if self.bid_depth[0][i] < 10000:
+                bid_depth_vivod = round(self.bid_depth[0][i],1)
+            else:
+                bid_depth_vivod = f'{round(self.bid_depth[0][i]/1000,1)}к'
+            
+            self.items.append(
+                ft.Container(
+                    content=ft.Row(
+                        controls=[ 
+                            ft.Text(
+                                value=bid_depth_vivod,
+                                size=12,
+                                width=50,
+                            ),
+                            ft.Text(
+                                value=self.bid_prices[0][i],
+                                size=12,
+                                width=60,
+                            ),
+                        ],  
+                    ),
+                    bgcolor = '#EDC6C6',
+                )
+            )   
         # print(f'{self.symbol} | {self.ask_depth[0][-1]} | {self.ask_prices[0][-1]}')
         for i in range(len(self.ask_prices[0])):
-            if round(self.ask_depth[0][i],1) != 0:
-                if len(str(self.bid_depth[0][i])) < 5:
-                    ask_depth_vivod = round(self.bid_depth[0][i],1)
-                else:
-                    ask_depth_vivod = f'{round(self.bid_depth[0][i]/1000,1)}к'
-                self.items.append(
-                    ft.Container(
-                        content=ft.Row(
-                            controls=[ 
-                                ft.Text(
-                                    value=ask_depth_vivod,
-                                    size=12,
-                                    width=50,
-                                ),
-                                ft.Text(
-                                    value=self.ask_prices[0][i],
-                                    size=12,
-                                    width=60,
-                                ),                        
-                            ],
-                        ),
-                        bgcolor = '#A0DBC6',
-                    )
+            # if round(self.ask_depth[0][i],1) > 0: # здесь поставить != тогда будет отсевание нулевых значений
+                # if len(str(self.bid_depth[0][i])) < 5:
+                #     ask_depth_vivod = round(self.bid_depth[0][i],1)
+                # else:
+                #     ask_depth_vivod = f'{round(self.bid_depth[0][i]/1000,1)}к'
+            if self.bid_depth[0][i] < 10000:
+                ask_depth_vivod = round(self.bid_depth[0][i],1)
+            else:
+                ask_depth_vivod = f'{round(self.bid_depth[0][i]/1000,1)}к'
+            self.items.append(
+                ft.Container(
+                    content=ft.Row(
+                        controls=[ 
+                            ft.Text(
+                                value=ask_depth_vivod,
+                                size=12,
+                                width=50,
+                            ),
+                            ft.Text(
+                                value=self.ask_prices[0][i],
+                                size=12,
+                                width=60,
+                            ),                        
+                        ],
+                    ),
+                    bgcolor = '#A0DBC6',
                 )
+            )
             stakan_column=ft.Column(
                     spacing=0, 
                     controls=self.items,
@@ -127,12 +136,8 @@ class Stakan_column(ft.UserControl):
         return stakan_column
     
 
-
-    # def did_mount(self):
-    #     print('222222')
-
     def build(self):
-        print('Рисуем СТАКАН')
+        print('РИСУЕМ ЧАСТЬ СТАКАНА')
         self.bid_x = []
         self.bid_z = []
         self.ask_x = []
@@ -145,99 +150,7 @@ class Stakan_column(ft.UserControl):
         stakan_column = self.stakan_print()
 
         return stakan_column
-        
-  
-    # def stakan_print(self):
-    #     self.items = []
-    #     for i in range(len(self.bid_prices[0])):
-    #         if round(self.bid_depth[0][i],1) != 0:
-    #             self.items.append(
-    #                 ft.Container(
-    #                     content=ft.Row(
-    #                         controls=[ 
-    #                             ft.Text(
-    #                                 value=round(self.bid_depth[0][i],1),
-    #                                 size=12,
-    #                                 width=50,
-    #                             ),
-    #                             ft.Text(
-    #                                 value=self.bid_prices[0][i],
-    #                                 size=12,
-    #                                 width=60,
-    #                             ),
-    #                         ],  
-    #                     ),
-    #                     bgcolor = '#EDC6C6',
-    #                 )
-    #             )   
-    #     for i in range(len(self.ask_prices[0])):
-    #         # print(f'{ask_depth[i][0]} | {ask_prices[i][0]}')
-    #         if round(self.ask_depth[0][i],1) != 0:
-    #             self.items.append(
-    #                 ft.Container(
-    #                     content=ft.Row(
-    #                         controls=[ 
-    #                             ft.Text(
-    #                                 value=round(self.ask_depth[0][i],1),
-    #                                 size=12,
-    #                                 width=50,
-    #                             ),
-    #                             ft.Text(
-    #                                 value=self.ask_prices[0][i],
-    #                                 size=12,
-    #                                 width=60,
-    #                             ),                        
-    #                         ],
-    #                     ),
-    #                     bgcolor = '#A0DBC6',
-    #                 )
-    #             )
-
-    #         stakan_column=ft.Column(
-    #                 spacing=0, 
-    #                 controls=self.items,
-    #                 scroll=ft.ScrollMode.HIDDEN,
-    #                 width=110
-    #             )
-    #     return stakan_column
-    
-
-
-    # # def did_mount(self):
-    # #     print('222222')
-
-    # def build(self):
-    #     # self.isolated = True
-    #     symbol = "btcusdt"
-    #     self.orderbook = Orderbook(symbol)
-    #     self.orderbook.connect()
-    #     self.bid_x = []
-    #     self.bid_z = []
-    #     self.ask_x = []
-    #     self.ask_z = []
-    #     self.y = [[0] * 100]
-    #     self.bid_count = 60
-    #     self.ask_count = 60
-
-    #     self.bid_prices,self.bid_depth,self.ask_prices,self.ask_depth = self.set_depth()
-    #     stakan_column = self.stakan_print()
-
-
-    #     time.sleep(1)
-    #     return stakan_column
-        
-  
-
-
-
-    
-
-
-
-
-
-
-
+   
 
 
 
