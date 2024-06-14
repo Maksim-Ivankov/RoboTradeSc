@@ -92,7 +92,7 @@ class Stakan_column(ft.UserControl):
                         bgcolor = '#EDC6C6',
                     )
                 )   
-        print(f'{self.symbol} | {self.ask_depth[0][-1]} | {self.ask_prices[0][-1]}')
+        # print(f'{self.symbol} | {self.ask_depth[0][-1]} | {self.ask_prices[0][-1]}')
         for i in range(len(self.ask_prices[0])):
             if round(self.ask_depth[0][i],1) != 0:
                 if len(str(self.bid_depth[0][i])) < 5:
@@ -132,7 +132,7 @@ class Stakan_column(ft.UserControl):
     #     print('222222')
 
     def build(self):
-  
+        print('Рисуем СТАКАН')
         self.bid_x = []
         self.bid_z = []
         self.ask_x = []

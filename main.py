@@ -5,59 +5,36 @@ from src.trade_window.big_trade.big_trade import Big_trade
 from src.trade_window.likvidnost.likvidnost import Likvidnost
 from src.trade_window.robot_trade.robot_trade import Robot_trade
 from src.trade_window.dev.dev import Dev   
-from model.orderbook_2 import Orderbook 
-import time, threading
-
-
-settings = ['DOGEUSDT','NOTUSDT']
-orderbook = Orderbook(settings)
-orderbook.connect()
+from model.orderbook_3 import Orderbook 
+import asyncio
+# import threading
+import multiprocessing as mp
+import time
 
 
 class Main:
     def __init__(self):
         self.page: ft.Page = None
-        self.bid_x = []
-        self.bid_z = []
-        self.ask_x = []
-        self.ask_z = []
-        self.y = [[0] * 100]
-        self.bid_count = 30
-        self.ask_count = 30
-        self.did_mount()
+        
+        # loop22734 = asyncio.new_event_loop()
+        # asyncio.set_event_loop(loop22734)
+        # loop22734 = asyncio.get_event_loop()
+        # loop22734.run_until_complete(self.websocket_start()) 
 
-    def did_mount(self):
-        print('МОНТИРОВАНИЕ')
-        self.running = True
-        self.myThread = threading.Thread(target=self.update_data22, args=(), daemon=True)
-        self.myThread.start()
+        # thread76544 = threading.Thread(target=self.websocket_start())
+        # thread76544.start()
+        # p=mp.Process(target=self.websocket_start)
+        # p.start()
 
-    def update_data22(self):
-        while self.running:
-            bid_data = orderbook.get_bids(settings[0])
-            bid_prices = sorted(bid_data.keys())[-self.bid_count:]
-            bid_quantities = [bid_data[price] for price in bid_prices]
-            bid_depth = []
-            cumulative_volume = 0
-            for qty in bid_quantities[::-1]:
-                bid_depth.append(qty)
-            bid_depth = bid_depth[::-1]
-            # print(f'{bid_x[0][-1]} | {bid_z[0][-1]}')
-            self.bid_x.append(bid_prices)
-            self.bid_z.append(bid_depth)
-            print(f'{self.bid_x[0][-1]} | {self.bid_z[0][-1]}')
-            # Без штуки ниже не обновляется график
-            self.y.append([self.y[-1][0] + 100] * 100)
-            if len(self.y) > 15:
-                del self.bid_x[0]
-                del self.bid_z[0]
-                del self.y[0]
-            
-            # self.update()
-            time.sleep(0.1)
+    async def websocket_start(self):
+        
+        await self.orderbook.connect() 
 
     def run(self, page):
         self.page: ft.Page = page
+        self.settings = ['BTCUSDT','NOTUSDT']
+        self.orderbook = Orderbook(self.settings)
+        self.orderbook.connect() 
         self.page.title = "MIN"
         self.page.window_height, self.page.window_width = 1000, 1200
         # self.page.scroll = ft.ScrollMode.HIDDEN
@@ -71,9 +48,9 @@ class Main:
                             controls=[
                                 ft.Row( # в которых 3 стакана
                                     controls=[
-                                        ft.Text('111')
-                                        # Stakan(settings[0],orderbook), # передаем монету и объект - оредрбук для доступа к нему
-                                        # Stakan(settings[1],orderbook),
+                                        # ft.Text('111')
+                                        Stakan(self.settings[0],self.orderbook), # передаем монету и объект - оредрбук для доступа к нему
+                                        Stakan(self.settings[1],self.orderbook),
                                         # Stakan(self.settings[2]),
                                     ],
                                     expand = True
@@ -103,7 +80,14 @@ class Main:
         self.page.add(self.main_print)
 
 
-    
-        
-
-ft.app(target=Main().run)
+# thread7654 = threading.Thread(target=ft.app(target=Main().run))
+# thread7654.start()
+           
+# loop22734 = asyncio.new_event_loop()
+# asyncio.set_event_loop(loop22734)
+# loop22734 = asyncio.get_event_loop()
+# loop22734.run_until_complete(ft.app(target=Main().run)) 
+if __name__ == '__main__':
+    main = Main()
+    # asyncio.run(main.websocket_start())
+    ft.app(target=Main().run)
