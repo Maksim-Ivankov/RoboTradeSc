@@ -1,15 +1,16 @@
 import flet as ft
-# import multiprocessing as mp
+import multiprocessing as mp
 import mplfinance as mpf
 import requests
 import pandas as pd
 
 # import matplotlib
 import matplotlib.pyplot as plt
-# import numpy as np
+import numpy as np
 from flet.matplotlib_chart import MatplotlibChart
 from mpl_finance import candlestick_ohlc 
-# from datetime import datetime
+from datetime import datetime
+
 
 
 # import matplotlib.dates as mpl_dates 
@@ -42,7 +43,7 @@ class Main:
         self.page.theme_mode = "light" 
 
         df = self.get_futures_klines('BTCUSDT','5m',100)
-       
+        df.index = pd.DatetimeIndex(df['open_time'])
         # datetime_df = []
         # for index, row in df.iterrows():
         #     datetime_df.append(datetime.fromtimestamp(int(row['open_time']/1000)).strftime('%H:%M'))
@@ -52,16 +53,41 @@ class Main:
         print(df)
         # print(df)
         # self.main_print = mpf.plot(df, type='candle', style='binance',title='',ylabel='',ylabel_lower='',volume=True)
-        fig, ax = plt.subplots() 
-        candlestick_ohlc(ax, df.values, width=0.6, colorup='green', colordown='red', alpha=0.8) 
-        # ax.set_xlabel('Date') 
-        # ax.set_ylabel('Price') 
-        fig.suptitle('BTCUSDT') 
-        fig.tight_layout()
+        # fig, ax = plt.subplots() 
+        # candlestick_ohlc(ax, df.values, width=0.6, colorup='green', colordown='red', alpha=0.8) 
+        # # ax.set_xlabel('Date') 
+        # # ax.set_ylabel('Price') 
+        # fig.suptitle('BTCUSDT') 
+        # fig.tight_layout()
 
         # date_format = mpl_dates.DateFormatter('%H:%M') 
         # ax.xaxis.set_major_formatter(date_format) 
         # fig.autofmt_xdate() 
+
+        
+        # plot the data
+        fig = plt.figure(figsize=(10, 5))
+        ax = fig.add_axes([0.1, 0.2, 0.85, 0.7])
+
+         # customization of the axis
+        ax.spines['right'].set_color('none')
+        ax.spines['top'].set_color('none')
+        ax.xaxis.set_ticks_position('bottom')
+        ax.yaxis.set_ticks_position('left')
+        ax.tick_params(axis='both', direction='out', width=2, length=8,
+                       labelsize=12, pad=8)
+        ax.spines['left'].set_linewidth(2)
+        ax.spines['bottom'].set_linewidth(2)
+            # set the ticks of the x axis only when starting a new day
+        # ax.set_xticks(data2[ndays[1],0])
+        # ax.set_xticklabels(xdays, rotation=45, horizontalalignment='right')
+
+        ax.set_ylabel('Quote ($)', size=20)
+        ax.set_ylim([177, 196])
+
+        candlestick_ohlc(ax, df.values, width=0.6, colorup='green', colordown='red', alpha=0.8) 
+
+        
 
         self.main_print = MatplotlibChart(fig, expand=True)
 

@@ -1,15 +1,16 @@
 import flet as ft
-# import multiprocessing as mp
+import multiprocessing as mp
 import mplfinance as mpf
 import requests
 import pandas as pd
 
 # import matplotlib
 import matplotlib.pyplot as plt
-# import numpy as np
+import numpy as np
 from flet.matplotlib_chart import MatplotlibChart
-from mpl_finance import candlestick_ohlc 
-# from datetime import datetime
+# from mpl_finance import candlestick_ohlc 
+from datetime import datetime
+
 
 
 # import matplotlib.dates as mpl_dates 
@@ -42,26 +43,55 @@ class Main:
         self.page.theme_mode = "light" 
 
         df = self.get_futures_klines('BTCUSDT','5m',100)
-       
+        df.index = pd.DatetimeIndex(df['open_time'])
         # datetime_df = []
         # for index, row in df.iterrows():
         #     datetime_df.append(datetime.fromtimestamp(int(row['open_time']/1000)).strftime('%H:%M'))
         # blocks = np.array(datetime_df)
         # df['open_time'] = blocks.tolist()
-        df = df[df.columns[[0,1,2,3,4]]]  # берем столбцы без даты открытия и закрытия
+        df = df[df.columns[[1,2,3,4]]]  # берем столбцы без даты открытия и закрытия
         print(df)
         # print(df)
         # self.main_print = mpf.plot(df, type='candle', style='binance',title='',ylabel='',ylabel_lower='',volume=True)
-        fig, ax = plt.subplots() 
-        candlestick_ohlc(ax, df.values, width=0.6, colorup='green', colordown='red', alpha=0.8) 
-        # ax.set_xlabel('Date') 
-        # ax.set_ylabel('Price') 
-        fig.suptitle('BTCUSDT') 
-        fig.tight_layout()
+        # fig, ax = plt.subplots() 
+        # candlestick_ohlc(ax, df.values, width=0.6, colorup='green', colordown='red', alpha=0.8) 
+        # # ax.set_xlabel('Date') 
+        # # ax.set_ylabel('Price') 
+        # fig.suptitle('BTCUSDT') 
+        # fig.tight_layout()
 
         # date_format = mpl_dates.DateFormatter('%H:%M') 
         # ax.xaxis.set_major_formatter(date_format) 
         # fig.autofmt_xdate() 
+
+        fig = plt.figure()
+
+        #define width of candlestick elements
+        width = .4
+        width2 = .05
+
+        #define up and down prices
+        up = df[df.close >=df.open ]
+        down = df[df.close <df.open ]
+
+        #define colors to use
+        col1 = 'green'
+        col2 = 'red'
+
+        #plot up prices
+        plt.bar (up.index ,up. close -up. open ,width,bottom=up. open ,color=col1)
+        plt.bar (up.index ,up. high -up. close ,width2,bottom=up. close ,color=col1)
+        plt.bar (up.index ,up. low -up. open ,width2,bottom=up. open ,color=col1)
+
+        #plot down prices
+        plt.bar (down.index ,down. close -down. open ,width,bottom=down. open ,color=col2)
+        plt.bar (down.index ,down. high -down. open ,width2,bottom=down. open ,color=col2)
+        plt.bar (down.index ,down. low -down. close ,width2,bottom=down. close ,color=col2)
+
+        #rotate x-axis tick labels
+        plt.xticks (rotation= 45 , ha='right')
+
+        
 
         self.main_print = MatplotlibChart(fig, expand=True)
 
