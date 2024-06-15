@@ -40,13 +40,8 @@ class Main:
         df.index = pd.DatetimeIndex(df['open_time'])
         df = df[df.columns[[1,2,3,4,5]]]  # берем столбцы без даты открытия и закрытия
         print(df)
-
         fig, axlist = mpf.plot(df, type='candle', style='binance',returnfig=True,title='',ylabel='',ylabel_lower='',volume=True)
-
-
         self.main_print = MatplotlibChart(fig)
-       
-
         self.page.add(self.main_print)
         
 

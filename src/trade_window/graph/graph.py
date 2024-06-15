@@ -1,5 +1,5 @@
 import flet as ft
-import mplfinance as mpf
+from src.graph.graph import Print_graph
 
 class Graph(ft.UserControl):
     def __init__(self,symbol,orderbook):
@@ -8,13 +8,13 @@ class Graph(ft.UserControl):
         self.orderbook = orderbook
 
 
-    def build(self):        
+    def build(self):     
+        graph = Print_graph(self.symbol,'5m')   
         self.graph = ft.Container( # окно выбора монеты
-                    content = ft.Text('График',text_align='center',),
+                    content = graph.print_graph(),
                     width=250,
                     height=200,
                     bgcolor='#d3eef0',
-                    padding=20
                 )
         
         return self.graph
